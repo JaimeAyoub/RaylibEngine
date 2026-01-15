@@ -9,7 +9,7 @@ public:
 	void Run();
 	void ShutDown();
 private:
-	Log log;
+
 	const int screenWidth = 800;
 	const int screenHeight = 450;
 };
