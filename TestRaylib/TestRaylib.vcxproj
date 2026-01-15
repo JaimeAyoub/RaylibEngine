@@ -24,6 +24,7 @@
     <ProjectGuid>{924e7980-28a2-453b-a704-c8ce9b252183}</ProjectGuid>
     <RootNamespace>TestRaylib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>EngineRayLib</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,11 +141,13 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ball.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\Log.cpp" />
-    <ClCompile Include="TestRaylib.cpp" />
+    <ClCompile Include="EngineRayLib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Ball.h" />
     <ClInclude Include="include\GameEngine.h" />
     <ClInclude Include="include\Log.h" />
   </ItemGroup>
