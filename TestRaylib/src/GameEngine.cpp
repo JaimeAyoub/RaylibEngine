@@ -43,7 +43,7 @@ void GameEngine::Draw()
 
     ClearBackground(RAYWHITE);
    
-    DrawText("Testeo", 190, 200, 20, LIGHTGRAY);
+    DrawText("Testeo", 190, 50, 20, LIGHTGRAY);
 
 
     if (!bolitas.empty())
