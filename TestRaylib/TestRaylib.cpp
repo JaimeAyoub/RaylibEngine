@@ -4,10 +4,10 @@
 #include <iostream>
 #include "GameEngine.h"
 
-GameEngine engine;
 
 int main(void)
 {
+GameEngine engine;
     engine.Init();
     engine.Run();
     engine.ShutDown();

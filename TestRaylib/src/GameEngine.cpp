@@ -8,7 +8,7 @@ void GameEngine::Init()
 
     SetTargetFPS(60);
 
-    log.print("Ventana inicializada");
+    Log::print("Ventana inicialziada");
 }
 
 void GameEngine::Update()
