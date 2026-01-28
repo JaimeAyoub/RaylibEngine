@@ -1,8 +1,6 @@
 #pragma once
-#include "raylib.h"
-#include "Log.h"
-#include "Ball.h"
-#include <vector>
+#include "GameScene.h"
+#include "BallsScene.h"
 class GameEngine {
 public:
 	GameEngine();
@@ -12,9 +10,13 @@ public:
 	void Draw();
 	void Run();
 	void ShutDown();
-	std::vector<Ball> bolitas;
+
 private:
 
 	const int screenWidth = 800;
 	const int screenHeight = 450;
+
+	GameScene* gameScene;
+	BallsScene* ballScene;
+
 };

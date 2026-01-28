@@ -4,7 +4,7 @@
 
 int main(void)
 {
-GameEngine engine;
+    GameEngine engine;
     engine.Init();
     engine.Run();
     engine.ShutDown();

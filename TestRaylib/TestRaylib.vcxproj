@@ -142,14 +142,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Ball.cpp" />
+    <ClCompile Include="src\BallsScene.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
+    <ClCompile Include="src\GameScene.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="EngineRayLib.cpp" />
+    <ClCompile Include="src\SceneBase.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ball.h" />
+    <ClInclude Include="include\BallsScene.h" />
     <ClInclude Include="include\GameEngine.h" />
+    <ClInclude Include="include\GameScene.h" />
     <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\SceneBase.h" />
+    <ClInclude Include="include\SceneManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
