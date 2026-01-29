@@ -1,10 +1,17 @@
 #include "BallsScene.h"
+BallsScene::BallsScene()
+{
+    eventManager.Suscribe(this, &BallsScene::EventLoadMsg);
+}
 
 void BallsScene::Load()
 {
     button = { 350,50,100,50 };
     buttonPressed = false;
     Name = "BallScene";
+    LoadBallsEvent event;
+    eventManager.emit(event);
+    
 }
 
 void BallsScene::UnLoad()
@@ -31,6 +38,7 @@ void BallsScene::Update()
         }
     }
     PressButton();
+
 }
 
 void BallsScene::Draw()
@@ -50,6 +58,15 @@ void BallsScene::Draw()
         }
     }
 
+    if (GuiButton(rectangle, "#191#Show Message")) showMsg = true;
+    if (showMsg)
+    {
+        int result = GuiMessageBox( { rectangle },
+            "#191#Message Box", "Hi! This is a message!", "Nice;Cool");
+
+        if (result >= 0) showMsg = false;
+    }
+
 }
 
 void BallsScene::PressButton()
@@ -60,3 +77,9 @@ void BallsScene::PressButton()
     }
     
 }
+
+void BallsScene::EventLoadMsg(const LoadBallsEvent& m)
+{
+    Log::print(m.msg);
+}
+

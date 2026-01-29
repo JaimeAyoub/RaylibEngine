@@ -2,6 +2,7 @@
 #include "SceneBase.h"
 #include "raylib.h"
 #include "Log.h"
+
 class GameScene :
 	public SceneBase
 {
