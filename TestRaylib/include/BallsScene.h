@@ -10,6 +10,7 @@
 struct LoadBallsEvent
 {
 	std::string msg = "BallScene loaded";
+
 };
 
 class BallsScene:
@@ -25,6 +26,7 @@ public:
 	void EventLoadMsg(const LoadBallsEvent& m);
 	bool showMsg = false;
 	Rectangle rectangle = { 24, 24, 120, 30 };
+	Rectangle rectangle2 = { 24, 24, 240, 120 };
 
 	
 private:

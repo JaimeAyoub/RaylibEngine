@@ -58,13 +58,13 @@ void BallsScene::Draw()
         }
     }
 
-    if (GuiButton(rectangle, "#191#Show Message")) showMsg = true;
+    if (GuiButton(rectangle, "#191#Boton testeo")) showMsg = true;
     if (showMsg)
     {
-        int result = GuiMessageBox( { rectangle },
-            "#191#Message Box", "Hi! This is a message!", "Nice;Cool");
+        int result = GuiMessageBox({ rectangle2 },
+            "#191#Ventana", "Elige que ventana quieres abrir!", "Cerrar");
 
-        if (result >= 0) showMsg = false;
+        if (result >= 1) showMsg = false;
     }
 
 }
