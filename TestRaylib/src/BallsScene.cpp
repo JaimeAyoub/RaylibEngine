@@ -57,8 +57,11 @@ void BallsScene::Draw()
             b->DrawBall();
         }
     }
+    LoadBallsEvent event;
 
-    if (GuiButton(rectangle, "#191#Boton testeo")) showMsg = true;
+    if (GuiButton(rectangle, "#191#Boton testeo")) {
+        eventManager.emit(event);
+    }
     if (showMsg)
     {
         int result = GuiMessageBox({ rectangle2 },
