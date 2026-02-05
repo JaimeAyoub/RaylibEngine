@@ -11,6 +11,10 @@ void BallsScene::Load()
     Name = "BallScene";
     LoadBallsEvent event;
     eventManager.emit(event);
+    texPrueba = LoadTexture("assets/textures/Kirbo.png");
+    texture = resourceManager.getTexture("Kirbo.png");
+    music = resourceManager.getMusic("Spark-Man.ogg");
+    PlayMusicStream(*music);
     
 }
 
@@ -21,13 +25,17 @@ void BallsScene::UnLoad()
         delete b;
     }
     bolitas.clear();
+    StopMusicStream(*music);
 }
 
 void BallsScene::Update()
 {
+
+    UpdateMusicStream(*music);
     if (IsMouseButtonPressed(0))
     {
         bolitas.emplace_back(new Ball());
+
     }
 
     if (!bolitas.empty())
@@ -49,7 +57,8 @@ void BallsScene::Draw()
 		, (GetScreenWidth() / 2) - 200, 15, 15, BLACK);
 
     DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
-
+    
+    DrawTexture(*texture, 250, 250, WHITE);
     if (!bolitas.empty())
     {
         for (Ball* b : bolitas)

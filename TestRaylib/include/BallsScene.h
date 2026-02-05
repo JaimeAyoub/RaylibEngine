@@ -5,8 +5,9 @@
 #include <vector>
 #include <EventManager.h>
 #include <Log.h>
+#include <memory>
 #include "raygui.h"
-
+#include "ResourceManager.h"
 struct LoadBallsEvent
 {
 	std::string msg = "BallScene loaded";
@@ -32,6 +33,9 @@ public:
 private:
 	std::vector<Ball*> bolitas;
 	Rectangle button;
+	Texture2D texPrueba;
+	std::shared_ptr<Music> music;
+	std::shared_ptr<Texture2D> texture;
 
 	
 };

@@ -116,12 +116,16 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>raylib.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>raylib.lib;winmm.lib;box2dd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)raylib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)assets" "$(OutDir)assets" /E/I/Y</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)assets" "$(OutDir)assets" /E/I/Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -148,6 +152,7 @@
     <ClCompile Include="src\GameScene.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="EngineRayLib.cpp" />
+    <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\SceneBase.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
   </ItemGroup>
@@ -158,6 +163,7 @@
     <ClInclude Include="include\GameEngine.h" />
     <ClInclude Include="include\GameScene.h" />
     <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\SceneBase.h" />
     <ClInclude Include="include\SceneManager.h" />
   </ItemGroup>

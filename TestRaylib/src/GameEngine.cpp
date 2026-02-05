@@ -8,7 +8,6 @@ GameEngine::GameEngine()
 {
 	gameScene = new GameScene;
 	ballScene = new BallsScene;
-	SceneManager::instance().ChangeScene(ballScene);
 	
 }
 
@@ -20,7 +19,9 @@ void GameEngine::Init()
 {
 
 	InitWindow(screenWidth, screenHeight, "GameEngine");
+	InitAudioDevice();
 	SetTargetFPS(60);
+	SceneManager::instance().ChangeScene(ballScene);
 	Log::print("Ventana inicialziada");
 }
 
