@@ -28,7 +28,7 @@ public:
 	bool showMsg = false;
 	Rectangle rectangle = { 24, 24, 120, 30 };
 	Rectangle rectangle2 = { 24, 24, 240, 120 };
-
+	
 	
 private:
 	std::vector<Ball*> bolitas;

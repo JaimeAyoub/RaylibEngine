@@ -15,6 +15,8 @@ void BallsScene::Load()
     texture = resourceManager.getTexture("Kirbo.png");
     music = resourceManager.getMusic("Spark-Man.ogg");
     PlayMusicStream(*music);
+
+    addEntity(physicsSystem.makeBox("Suelo", "Ground", { 400,400 }, { 80,80 }, false));
     
 }
 
@@ -30,7 +32,7 @@ void BallsScene::UnLoad()
 
 void BallsScene::Update()
 {
-
+    SceneBase::Update();
     UpdateMusicStream(*music);
     if (IsMouseButtonPressed(0))
     {
@@ -44,6 +46,12 @@ void BallsScene::Update()
         {
             b->UpdateBall();
         }
+    }
+
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+        Vector2 mPos = GetMousePosition();
+
+        addEntity(physicsSystem.makeBox("Caja", "Box", mPos, { 40,40 }, true));
     }
     PressButton();
 
@@ -78,6 +86,7 @@ void BallsScene::Draw()
 
         if (result >= 1) showMsg = false;
     }
+    SceneBase::Draw();
 
 }
 

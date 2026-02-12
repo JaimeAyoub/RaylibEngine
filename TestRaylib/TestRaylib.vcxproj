@@ -111,13 +111,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include;raygui.h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include;raygui.h;$(ProjectDir)lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>raylib.lib;winmm.lib;box2dd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)raylib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -147,11 +147,14 @@
   <ItemGroup>
     <ClCompile Include="src\Ball.cpp" />
     <ClCompile Include="src\BallsScene.cpp" />
+    <ClCompile Include="src\Bodies.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\EventManager.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\GameScene.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="EngineRayLib.cpp" />
+    <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\SceneBase.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
@@ -159,10 +162,13 @@
   <ItemGroup>
     <ClInclude Include="include\Ball.h" />
     <ClInclude Include="include\BallsScene.h" />
+    <ClInclude Include="include\Bodies.h" />
+    <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\EventManager.h" />
     <ClInclude Include="include\GameEngine.h" />
     <ClInclude Include="include\GameScene.h" />
     <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\PhysicsSystem.h" />
     <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\SceneBase.h" />
     <ClInclude Include="include\SceneManager.h" />

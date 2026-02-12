@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "SceneManager.h"
 #include "GameScene.h"
+#include "include/base.h"
 
 GameEngine::GameEngine()
 {

@@ -29,6 +29,6 @@ void Ball::UpdateBall()
 
 void Ball::DrawBall()
 {
-	//DrawCircle(posX, posY, radius, color);
-	DrawTexture(kirby, posX, posY, WHITE);
+	DrawCircle(posX, posY, radius, color);
+	//rawTexture(kirby, posX, posY, WHITE);
 }
