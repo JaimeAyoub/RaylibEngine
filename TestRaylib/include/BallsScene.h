@@ -28,6 +28,8 @@ public:
 	bool showMsg = false;
 	Rectangle rectangle = { 24, 24, 120, 30 };
 	Rectangle rectangle2 = { 24, 24, 240, 120 };
+
+	BodyData boxDef;
 	
 	
 private:
@@ -36,6 +38,8 @@ private:
 	Texture2D texPrueba;
 	std::shared_ptr<Music> music;
 	std::shared_ptr<Texture2D> texture;
+
+	void onCollision(const CollisionEvent& event);
 
 	
 };

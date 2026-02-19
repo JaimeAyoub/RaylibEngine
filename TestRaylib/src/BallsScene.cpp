@@ -6,6 +6,12 @@ BallsScene::BallsScene()
 
 void BallsScene::Load()
 {
+    boxDef.pos = { 400,400 };
+    boxDef.isDynamic = false;
+    boxDef.name = "Suelo";
+    boxDef.size = { 800,80 };
+
+
     button = { 350,50,100,50 };
     buttonPressed = false;
     Name = "BallScene";
@@ -16,7 +22,16 @@ void BallsScene::Load()
     music = resourceManager.getMusic("Spark-Man.ogg");
     PlayMusicStream(*music);
 
-    addEntity(physicsSystem.makeBox("Suelo", "Ground", { 400,400 }, { 80,80 }, false));
+    addEntity(physicsSystem.makeBox(boxDef));
+
+    eventManager.Suscribe<CollisionEvent>(this, &BallsScene::onCollision);
+    for (int i = 0; i < 4; i++)
+    {
+        BodyData current = boxDef;
+
+        current.pos.y = boxDef.pos.y - i * boxDef.size.y;
+        addEntity(physicsSystem.makeBox(current));
+    }
     
 }
 
@@ -32,11 +47,14 @@ void BallsScene::UnLoad()
 
 void BallsScene::Update()
 {
-    SceneBase::Update();
+    
     UpdateMusicStream(*music);
     if (IsMouseButtonPressed(0))
     {
-        bolitas.emplace_back(new Ball());
+        //bolitas.emplace_back(new Ball());
+        Vector2 mPos = GetMousePosition();
+
+        addEntity(physicsSystem.makeBox("Caja", "Box", mPos, { 40,40 }, true));
 
     }
 
@@ -48,11 +66,7 @@ void BallsScene::Update()
         }
     }
 
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-        Vector2 mPos = GetMousePosition();
-
-        addEntity(physicsSystem.makeBox("Caja", "Box", mPos, { 40,40 }, true));
-    }
+   
     PressButton();
 
 }
@@ -86,7 +100,7 @@ void BallsScene::Draw()
 
         if (result >= 1) showMsg = false;
     }
-    SceneBase::Draw();
+    
 
 }
 
@@ -102,5 +116,10 @@ void BallsScene::PressButton()
 void BallsScene::EventLoadMsg(const LoadBallsEvent& m)
 {
     Log::print(m.msg);
+}
+
+void BallsScene::onCollision(const CollisionEvent& event)
+{
+    Log::print("¡Colisión detectada entre " + event.A->getName());
 }
 

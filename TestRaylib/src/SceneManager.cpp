@@ -19,12 +19,12 @@ void SceneManager::ChangeScene(SceneBase* newScene)
 
 void SceneManager::UpdateScene()
 {
-	currentScene->Update();
+	currentScene->UpdateScene();
 }
 
 void SceneManager::DrawScene()
 {
-	currentScene->Draw();
+	currentScene->DrawScene();
 }
 
 SceneBase* SceneManager::GetCurrentScene()

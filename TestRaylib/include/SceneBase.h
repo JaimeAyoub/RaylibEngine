@@ -15,10 +15,13 @@ public:
 	EventManager& eventManager = EventManager::instance();
 	ResourceManager& resourceManager = ResourceManager::instance();
 	PhysicsSystem& physicsSystem = PhysicsSystem::instance();
+
 	virtual ~SceneBase() = default;
-	virtual void Load() = 0;
-	virtual void UnLoad() = 0;
-	virtual void Update() {
+	
+
+	 void UpdateScene() {
+		 Update();
+
 		physicsSystem.update(GetFrameTime());
 
 		for (auto& e : entities) e->update();
@@ -31,9 +34,15 @@ public:
 			entities.end()
 		);		
 	}
-	virtual void Draw() {
+	void DrawScene() {
 		for (auto& e : entities) e->draw();
+		Draw();
 	}
+	virtual void Load() = 0;
+	virtual void UnLoad() = 0;
+	virtual void Update() = 0;
+	virtual void Draw() = 0;
+
 
 	virtual void Clear() {
 		entities.clear();

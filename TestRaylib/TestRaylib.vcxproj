@@ -150,10 +150,12 @@
     <ClCompile Include="src\Bodies.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\EventManager.cpp" />
+    <ClCompile Include="src\EventTypes.cpp" />
     <ClCompile Include="src\GameEngine.cpp" />
     <ClCompile Include="src\GameScene.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="EngineRayLib.cpp" />
+    <ClCompile Include="src\PhysicsEntity.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\SceneBase.cpp" />
@@ -165,9 +167,11 @@
     <ClInclude Include="include\Bodies.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\EventManager.h" />
+    <ClInclude Include="include\EventTypes.h" />
     <ClInclude Include="include\GameEngine.h" />
     <ClInclude Include="include\GameScene.h" />
     <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\PhysicsEntity.h" />
     <ClInclude Include="include\PhysicsSystem.h" />
     <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\SceneBase.h" />
