@@ -1,15 +1,34 @@
 #include "BallsScene.h"
+#include <fstream>
+#include "include/nlohmann/json.hpp"
+using json = nlohmann::json;
+
 BallsScene::BallsScene()
 {
     eventManager.Suscribe(this, &BallsScene::EventLoadMsg);
+   
+    
+    std::ifstream f("assets/json/PruebaJSON.json");
+
+    if (f.is_open()) {
+        printf("Archivo Abierto \n");
+        json data = json::parse(f);
+        std::string type = data["type"];
+        printf("Tipo de objeto : %s \n", type.c_str());
+    }
+    else
+        printf("Valio verga, NO SE CARGO \n");
+
 }
 
 void BallsScene::Load()
 {
+  
+
     boxDef.pos = { 400,400 };
     boxDef.isDynamic = false;
     boxDef.name = "Suelo";
-    boxDef.size = { 800,80 };
+    boxDef.size = { 800,40 };
 
 
     button = { 350,50,100,50 };
