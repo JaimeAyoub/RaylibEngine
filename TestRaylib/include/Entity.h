@@ -11,6 +11,7 @@ public:
 	float angle;
 	bool active = true;
 
+
 public:
 	Entity(std::string name, std::string tag) :
 		name(name), tag(tag), pos({ 0,0 }), angle(0) {

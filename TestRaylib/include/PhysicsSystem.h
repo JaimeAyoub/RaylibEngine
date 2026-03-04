@@ -137,5 +137,10 @@ public:
 
 		return circleEntity;
 	}
+	b2WorldId ReturnWorld()
+	{
+		return world;
+	}
+
 };
 

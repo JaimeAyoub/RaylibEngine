@@ -30,6 +30,8 @@ public:
 	Rectangle rectangle2 = { 24, 24, 240, 120 };
 
 	BodyData boxDef;
+
+
 	
 	
 private:
@@ -38,8 +40,19 @@ private:
 	Texture2D texPrueba;
 	std::shared_ptr<Music> music;
 	std::shared_ptr<Texture2D> texture;
+	std::shared_ptr<PCircle> pivot;
+	std::shared_ptr<PCircle> pivot2;
+	std::shared_ptr<PCircle> cir;
+	b2DistanceJointDef jointDef;
+	b2DistanceJointDef jointDef2;
+	b2JointId myJointId;
+	b2JointId myJointId2;
 
+	Vector2 lineStartPos;
+	bool isDrawingLine = false;
+	
 	void onCollision(const CollisionEvent& event);
+
 
 	
 };
