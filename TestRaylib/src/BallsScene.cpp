@@ -31,8 +31,7 @@ void BallsScene::Load()
 
 	auto joint = physicsSystem.makeJoint(pivot, cir);
 	auto joint2 = physicsSystem.makeJoint(pivot2, cir);
-	joints.emplace(joint->jointId, joint->jointDef);
-	joints.emplace(joint2->jointId, joint2->jointDef);
+
 
 	jointsVector.push_back(joint);
 	jointsVector.push_back(joint2);

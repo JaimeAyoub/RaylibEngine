@@ -45,7 +45,6 @@ private:
 	std::shared_ptr<PCircle> pivot;
 	std::shared_ptr<PCircle> pivot2;
 	std::shared_ptr<PCircle> cir;
-	std::map< std::shared_ptr<b2JointId>, std::shared_ptr<b2DistanceJointDef>> joints;
 
 	std::vector<std::shared_ptr<JointData>> jointsVector;
 
