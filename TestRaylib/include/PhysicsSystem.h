@@ -18,6 +18,20 @@ struct BodyData {
 	float restitution = 0.5f;
 	std::string tag = "Entity";
 };
+
+struct PivotData {
+	std::string name = "Pivote";
+	std::string tag = "Pivote";
+	Vector2 pos = { 50,100 };
+	float radius = 50;
+	bool isDynamic = false;
+};
+
+struct JointData {
+	std::shared_ptr<b2DistanceJointDef> jointDef;
+	std::shared_ptr<b2JointId> jointId;
+	std::shared_ptr<PCircle> pivot;
+};
 class PhysicsSystem
 {
 private: 
@@ -141,6 +155,39 @@ public:
 	{
 		return world;
 	}
+
+	std::shared_ptr <JointData> makeJoint(std::shared_ptr<PCircle> Pivote, std::shared_ptr<PCircle> bola)
+	{
+		auto jointDef = std::make_shared<b2DistanceJointDef>(b2DefaultDistanceJointDef());
+
+		jointDef->bodyIdA = Pivote->body;
+		jointDef->bodyIdB = bola->body;
+
+		jointDef->localAnchorA = { 0, 0 };
+		jointDef->localAnchorB = { 0, 0 };
+
+		jointDef->length = 200.0f;
+
+		jointDef->enableSpring = true;
+		jointDef->hertz = 2.0f;
+		jointDef->dampingRatio = 0.5f;
+		
+		auto jointId = std::make_shared<b2JointId>(b2CreateDistanceJoint(world, jointDef.get()));
+
+		auto jointData = std::make_shared<JointData>();
+		jointData->jointDef = jointDef;
+		jointData->jointId = jointId;
+		jointData->pivot = Pivote;
+
+		return jointData;
+	}
+
+	void DeleteJoint(std::shared_ptr<b2JointId> jointID)
+	{
+		b2DestroyJoint(*jointID);
+		*jointID = b2_nullJointId;
+	}
+
 
 };
 

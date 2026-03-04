@@ -3,6 +3,7 @@
 #include "SceneBase.h"
 #include "Ball.h"
 #include <vector>
+#include <map>
 #include <EventManager.h>
 #include <Log.h>
 #include <memory>
@@ -13,6 +14,7 @@ struct LoadBallsEvent
 	std::string msg = "BallScene loaded";
 
 };
+
 
 class BallsScene:
 	public SceneBase
@@ -43,10 +45,9 @@ private:
 	std::shared_ptr<PCircle> pivot;
 	std::shared_ptr<PCircle> pivot2;
 	std::shared_ptr<PCircle> cir;
-	b2DistanceJointDef jointDef;
-	b2DistanceJointDef jointDef2;
-	b2JointId myJointId;
-	b2JointId myJointId2;
+	std::map< std::shared_ptr<b2JointId>, std::shared_ptr<b2DistanceJointDef>> joints;
+
+	std::vector<std::shared_ptr<JointData>> jointsVector;
 
 	Vector2 lineStartPos;
 	bool isDrawingLine = false;
@@ -56,5 +57,6 @@ private:
 
 	
 };
+
 
 
