@@ -110,22 +110,21 @@ void BallsScene::Update()
 	}
 
 
-	Vector2 collision;
 	if (isDrawingLine && !jointsVector.empty())
 	{
+		Vector2 collision;
 		for (auto& joint : jointsVector)
 		{
 			if (CheckCollisionLines(joint->pivot->pos,cir->pos,
 				lineStartPos, GetMousePosition(), &collision))
 			{
-				if (b2Joint_IsValid(*joint->jointId) == true) 
+				if (b2Joint_IsValid(joint->jointId) == true) 
 				{
 					physicsSystem.DeleteJoint(joint->jointId);
 				}
 
 			}
 		}
-
 		
 	}
 
@@ -133,15 +132,6 @@ void BallsScene::Update()
 
 
 
-
-
-	if (!bolitas.empty())
-	{
-		for (Ball* b : bolitas)
-		{
-			b->UpdateBall();
-		}
-	}
 
 
 	PressButton();
@@ -161,25 +151,18 @@ void BallsScene::Draw()
 	{
 		for (auto& joint : jointsVector)
 		{
-			if (b2Joint_IsValid(*joint->jointId) == true) {
+			if (b2Joint_IsValid(joint->jointId) == true) {
 				DrawLineV(joint->pivot->pos, cir->pos,BLACK);
 			}
 		}
 	}
 
-	//DrawTexture(*texture, 250, 250, WHITE);
-	if (!bolitas.empty())
-	{
-		for (Ball* b : bolitas)
-		{
-			b->DrawBall();
-		}
-	}
-	LoadBallsEvent event;
+
+	/*LoadBallsEvent event;
 
 	if (GuiButton(rectangle, "#191#Boton testeo")) {
 		eventManager.emit(event);
-	}
+	}*/
 	if (showMsg)
 	{
 		int result = GuiMessageBox({ rectangle2 },

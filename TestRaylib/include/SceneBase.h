@@ -32,7 +32,7 @@ public:
 					return !e->isActive();
 				}),
 			entities.end()
-		);		
+		);	
 	}
 	void DrawScene() {
 		for (auto& e : entities) e->draw();
