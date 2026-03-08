@@ -22,7 +22,7 @@ void GameEngine::Init()
 	InitWindow(screenWidth, screenHeight, "GameEngine");
 	InitAudioDevice();
 	SetTargetFPS(60);
-	SceneManager::instance().ChangeScene(ballScene);
+	SceneManager::instance().ChangeScene(gameScene);
 	Log::print("Ventana inicialziada");
 }
 

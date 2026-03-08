@@ -16,6 +16,7 @@ struct LoadBallsEvent
 };
 
 
+
 class BallsScene:
 	public SceneBase
 {
@@ -37,7 +38,6 @@ public:
 	
 	
 private:
-	std::vector<Ball*> bolitas;
 	Rectangle button;
 	Texture2D texPrueba;
 	std::shared_ptr<Music> music;
@@ -46,12 +46,16 @@ private:
 	std::shared_ptr<PCircle> pivot2;
 	std::shared_ptr<PCircle> cir;
 
+	bool isWin = false;
+	bool isDefeat = false;
 	std::vector<std::shared_ptr<JointData>> jointsVector;
 
 	Vector2 lineStartPos;
 	bool isDrawingLine = false;
 	
 	void onCollision(const CollisionEvent& event);
+
+
 
 
 	

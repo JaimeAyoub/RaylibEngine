@@ -186,6 +186,7 @@ public:
 
 	void DeleteJoint(b2JointId jointID)
 	{
+
 		b2DestroyJoint(jointID);
 		jointID = b2_nullJointId;
 	}

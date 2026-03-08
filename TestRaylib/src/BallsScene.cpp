@@ -41,13 +41,13 @@ void BallsScene::Load()
 
 
 
-	boxDef.pos = { 400,600 };
+	boxDef.pos = { 600,450 };
 	boxDef.isDynamic = false;
-	boxDef.name = "Suelo";
-	boxDef.size = { 800,40 };
+	boxDef.name = "Goal";
+	boxDef.size = { 80,10 };
 
 
-	button = { 350,50,100,50 };
+	button = { 350,350,100,50 };
 	buttonPressed = false;
 	Name = "BallScene";
 	LoadBallsEvent event;
@@ -59,10 +59,6 @@ void BallsScene::Load()
 	addEntity(pivot);
 	addEntity(pivot2);
 	addEntity(cir);
-
-
-
-
 
 	addEntity(physicsSystem.makeBox(boxDef));
 
@@ -81,12 +77,19 @@ void BallsScene::Load()
 
 void BallsScene::UnLoad()
 {
-	for (Ball* b : bolitas)
+	for (auto& joint : jointsVector)
 	{
-		delete b;
+		if (b2Joint_IsValid(joint->jointId) == true)
+		{
+			physicsSystem.DeleteJoint(joint->jointId);
+		}
 	}
-	bolitas.clear();
+	jointsVector.clear();
 	StopMusicStream(*music);
+	isDrawingLine = false;
+	isWin = false;
+	isDefeat = false;
+	Clear();
 }
 
 void BallsScene::Update()
@@ -128,6 +131,12 @@ void BallsScene::Update()
 		
 	}
 
+	if (cir->pos.y > 700 && isDefeat == false)
+	{
+		Log::print("Se cayo la bola");
+		isDefeat = true;
+	}
+
 
 
 
@@ -140,12 +149,26 @@ void BallsScene::Update()
 
 void BallsScene::Draw()
 {
-	DrawRectangleRec(button, buttonPressed ? RED : DARKGRAY);
+	if (isWin == true)
+	{
+		DrawRectangleRec(button, buttonPressed ? RED : DARKGRAY);
 
-	DrawText("Click en alguna parte de la pantalla para aparecer bolitas."
-		, (GetScreenWidth() / 2) - 200, 15, 15, BLACK);
+		DrawText("WIN"
+			, (GetScreenWidth() / 2) - 200, 15, 50, BLACK);
 
-	DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
+		DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
+	}
+
+	if (isDefeat == true)
+	{
+		DrawRectangleRec(button, buttonPressed ? RED : DARKGRAY);
+
+		DrawText("Perdiste, tonto"
+			, (GetScreenWidth() / 2) - 200, 15, 50, BLACK);
+
+		DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
+	}
+	
 
 	if (!jointsVector.empty())
 	{
@@ -158,11 +181,10 @@ void BallsScene::Draw()
 	}
 
 
-	/*LoadBallsEvent event;
 
-	if (GuiButton(rectangle, "#191#Boton testeo")) {
-		eventManager.emit(event);
-	}*/
+
+	
+	
 	if (showMsg)
 	{
 		int result = GuiMessageBox({ rectangle2 },
@@ -196,7 +218,15 @@ void BallsScene::EventLoadMsg(const LoadBallsEvent& m)
 
 void BallsScene::onCollision(const CollisionEvent& event)
 {
-	Log::print("¡Colisión detectada entre " + event.A->getName());
+	if (event.A->getName() == "Goal")
+	{
+		isWin = true;
+	}
+	else
+	{
+		Log::print("¡Colisión detectada entre " + event.A->getName());
+	}
 }
+
 
 
