@@ -86,10 +86,14 @@ void BallsScene::UnLoad()
 	}
 	jointsVector.clear();
 	StopMusicStream(*music);
+	UnloadTexture(texPrueba);
+
 	isDrawingLine = false;
 	isWin = false;
 	isDefeat = false;
 	Clear();
+	eventManager.Unsubscribe<LoadBallsEvent>(this);
+	eventManager.Unsubscribe<CollisionEvent>(this);
 }
 
 void BallsScene::Update()
