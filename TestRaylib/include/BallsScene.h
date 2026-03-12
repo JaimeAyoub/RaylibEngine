@@ -9,6 +9,8 @@
 #include <memory>
 #include "raygui.h"
 #include "ResourceManager.h"
+#include "sol/sol.hpp"
+
 struct LoadBallsEvent
 {
 	std::string msg = "BallScene loaded";
@@ -52,7 +54,13 @@ private:
 
 	Vector2 lineStartPos;
 	bool isDrawingLine = false;
+
+	void BindRayLib();
 	
+	sol::state lua;
+	sol::function luaUpdate;
+	sol::function luaDraw;
+
 	void onCollision(const CollisionEvent& event);
 
 

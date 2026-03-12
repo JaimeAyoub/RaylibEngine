@@ -62,7 +62,7 @@ void BallsScene::Load()
 
 	addEntity(physicsSystem.makeBox(boxDef));
 
-
+	BindRayLib();
 
 	eventManager.Suscribe<CollisionEvent>(this, &BallsScene::onCollision);
 	for (int i = 0; i < 4; i++)
@@ -99,6 +99,10 @@ void BallsScene::UnLoad()
 void BallsScene::Update()
 {
 
+	if (luaUpdate)
+	{
+		luaUpdate();
+	}
 	UpdateMusicStream(*music);
 
 
@@ -135,7 +139,7 @@ void BallsScene::Update()
 		
 	}
 
-	if (cir->pos.y > 700 && isDefeat == false)
+	if (cir->pos.y > 700 && isDefeat == false && isWin == false)
 	{
 		Log::print("Se cayo la bola");
 		isDefeat = true;
@@ -161,6 +165,10 @@ void BallsScene::Draw()
 			, (GetScreenWidth() / 2) - 200, 15, 50, BLACK);
 
 		DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
+	}
+	if (luaDraw)
+	{
+		luaDraw();
 	}
 
 	if (isDefeat == true)
@@ -218,6 +226,41 @@ void BallsScene::PressButton()
 void BallsScene::EventLoadMsg(const LoadBallsEvent& m)
 {
 	Log::print(m.msg);
+}
+
+void BallsScene::BindRayLib()
+{
+	lua.open_libraries(sol::lib::base, sol::lib::table, sol::lib::math);
+	sol::table rl = lua.create_named_table("rl");
+
+	rl.set_function("draw_circle", [](float x, float y, float r,
+		sol::optional<Color> c) {
+			Color color = c.value_or(MAROON);
+			Vector2 center = { x,y };
+			DrawCircleV(center, r, color);
+		});
+	rl.set_function("mouse_pressed", &IsMouseButtonPressed);
+	rl.set_function("mouse_x", &GetMouseX);
+	rl.set_function("mouse_y", &GetMouseY);
+	//rl.set_function("to_world"), [&](float sx, float sy) {
+	//	Vector2 world = GetScreenToWorld2D({ sx,sy }, cam);
+	//	return std::make_tuple(world.x, world.y);
+	//	});
+	rl.set_function("print", [](std::string message) {
+		std::cout << "[LUA]: " << message << std::endl;
+	});
+	rl["maroon"] = MAROON;
+	auto result = lua.script_file("assets/scripts/play_scene.lua");
+	if (result.valid()) {
+		luaUpdate = lua["update"];
+		luaDraw = lua["draw"];
+		std::cout << "Script cargado y funciones vinculadas." << std::endl;
+	}
+	else
+	{
+		sol::error err = result;
+		std::cerr << "LUA ERROR: " << err.what() << std::endl;
+	}
 }
 
 void BallsScene::onCollision(const CollisionEvent& event)
