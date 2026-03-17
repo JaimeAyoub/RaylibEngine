@@ -10,7 +10,7 @@
 #include "raygui.h"
 #include "ResourceManager.h"
 #include "sol/sol.hpp"
-
+#include "Joint.h"
 struct LoadBallsEvent
 {
 	std::string msg = "BallScene loaded";
@@ -35,6 +35,10 @@ public:
 	Rectangle rectangle2 = { 24, 24, 240, 120 };
 
 	BodyData boxDef;
+	BodyData pivotDef;
+	BodyData pivotDef2;
+	std::shared_ptr<BodyData> pelotaDef;
+
 
 
 	
@@ -44,13 +48,12 @@ private:
 	Texture2D texPrueba;
 	std::shared_ptr<Music> music;
 	std::shared_ptr<Texture2D> texture;
-	std::shared_ptr<PCircle> pivot;
-	std::shared_ptr<PCircle> pivot2;
+
 	std::shared_ptr<PCircle> cir;
 
 	bool isWin = false;
 	bool isDefeat = false;
-	std::vector<std::shared_ptr<JointData>> jointsVector;
+	std::vector<std::shared_ptr<Joint>> jointsVector;
 
 	Vector2 lineStartPos;
 	bool isDrawingLine = false;

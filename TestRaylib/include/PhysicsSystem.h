@@ -5,6 +5,7 @@
 #include "EventManager.h"
 #include "EventTypes.h"
 #include <string>
+#include <iostream>
 
 
 struct BodyData {
@@ -30,24 +31,24 @@ struct PivotData {
 struct JointData {
 	b2DistanceJointDef jointDef;
 	b2JointId jointId;
-	PCircle* pivot;
-	PCircle* bola;
+	std::shared_ptr<PCircle> pivot;
+	std::shared_ptr<PCircle> bola;
 };
 class PhysicsSystem
 {
-private: 
+private:
 	b2WorldId world;
 	float accumulator = 0.0f;
 	const float timeStep = 1.0f / 60.0f;
 
-	PhysicsSystem(){
+	PhysicsSystem() {
 		initWorld();
 	}
 	void initWorld() {
 		b2WorldDef worldDef = b2DefaultWorldDef();
 		float lenghtUnitsPerMeter = 40.0f;
 		b2SetLengthUnitsPerMeter(lenghtUnitsPerMeter);
-		worldDef.gravity = { 0.0f,9.8f *lenghtUnitsPerMeter };
+		worldDef.gravity = { 0.0f,9.8f * lenghtUnitsPerMeter };
 		world = b2CreateWorld(&worldDef);
 	}
 
@@ -122,11 +123,11 @@ public:
 
 		b2Polygon box = b2MakeBox(size.x / 2.0f, size.y / 2.0f);
 		b2CreatePolygonShape(bodyId, &shadeDef, &box);
-		
+
 		auto boxEntity = std::make_shared<PBox>(name, tag, bodyId, size, isDynamic);
 
 		b2Body_SetUserData(bodyId, boxEntity.get());
-		
+
 		return boxEntity;
 	}
 
@@ -152,14 +153,20 @@ public:
 
 		return circleEntity;
 	}
-	b2WorldId ReturnWorld()
-	{
-		return world;
-	}
+	std::shared_ptr<JointData> makeJoint(const BodyData& pivotData, const BodyData& bolaData ) {
+		auto pivote = makeCircle(pivotData);
+		auto bola = makeCircle(bolaData);
+		return makeJoint(pivote, bola);
 
+	}
+	std::shared_ptr<JointData> makeJoint(const BodyData& pivotData, std::shared_ptr<PCircle> bola)
+	{
+		auto pivote = makeCircle(pivotData);
+		return makeJoint(pivote, bola);
+	}
 	std::shared_ptr <JointData> makeJoint(std::shared_ptr<PCircle> Pivote, std::shared_ptr<PCircle> bola)
 	{
-		b2DistanceJointDef jointDef =b2DefaultDistanceJointDef();
+		b2DistanceJointDef jointDef = b2DefaultDistanceJointDef();
 
 		jointDef.bodyIdA = Pivote->body;
 		jointDef.bodyIdB = bola->body;
@@ -172,14 +179,15 @@ public:
 		jointDef.enableSpring = true;
 		jointDef.hertz = 2.0f;
 		jointDef.dampingRatio = 0.5f;
-		
+
 		b2JointId jointId = b2CreateDistanceJoint(world, &jointDef);
 
 		auto jointData = std::make_shared<JointData>();
 		jointData->jointDef = jointDef;
 		jointData->jointId = jointId;
-		jointData->pivot = Pivote.get();
-		jointData->bola = bola.get();
+		jointData->pivot = Pivote;
+		jointData->bola = bola;
+		std::cout << "Joint creado" << std::endl;
 
 		return jointData;
 	}
@@ -190,6 +198,12 @@ public:
 		b2DestroyJoint(jointID);
 		jointID = b2_nullJointId;
 	}
+	b2WorldId ReturnWorld() const
+	{
+		return world;
+	}
+
+
 
 
 };

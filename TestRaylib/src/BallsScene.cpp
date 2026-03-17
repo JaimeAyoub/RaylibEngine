@@ -1,6 +1,7 @@
 #include "BallsScene.h"
 #include <fstream>
 #include "include/nlohmann/json.hpp"
+
 using json = nlohmann::json;
 
 BallsScene::BallsScene()
@@ -24,20 +25,7 @@ BallsScene::BallsScene()
 void BallsScene::Load()
 {
 
-
-	pivot = physicsSystem.makeCircle("Bolita2", "Ball", { 50, 100 }, 50, false);
-	pivot2 = physicsSystem.makeCircle("Bolita2", "Ball", { 500, 100 }, 50, false);
 	cir = physicsSystem.makeCircle("Bolita", "Ball", { 450, 200 }, 30, true);
-
-	auto joint = physicsSystem.makeJoint(pivot, cir);
-	auto joint2 = physicsSystem.makeJoint(pivot2, cir);
-
-
-	jointsVector.push_back(joint);
-	jointsVector.push_back(joint2);
-
-
-
 
 
 
@@ -46,6 +34,19 @@ void BallsScene::Load()
 	boxDef.name = "Goal";
 	boxDef.size = { 80,10 };
 
+	pivotDef.name = "Pivote";
+	pivotDef.isDynamic = false;
+	pivotDef.pos = { 50,100 };
+	pivotDef.radius = 50;
+
+	pivotDef2.name = "Pivote2";
+	pivotDef2.isDynamic = false;
+	pivotDef2.pos = { 500,100 };
+	pivotDef2.radius = 50;
+
+
+
+
 
 	button = { 350,350,100,50 };
 	buttonPressed = false;
@@ -53,14 +54,27 @@ void BallsScene::Load()
 	LoadBallsEvent event;
 	eventManager.emit(event);
 	texPrueba = LoadTexture("assets/textures/Kirbo.png");
-	//texture = resourceManager.getTexture("Kirbo.png");
-	music = resourceManager.getMusic("Spark-Man.ogg");
-	PlayMusicStream(*music);
-	addEntity(pivot);
-	addEntity(pivot2);
-	addEntity(cir);
 
-	addEntity(physicsSystem.makeBox(boxDef));
+	auto joint1 = std::make_shared<Joint>(physicsSystem.makeJoint(pivotDef, cir));
+	auto joint2 = std::make_shared<Joint>(physicsSystem.makeJoint(pivotDef2, cir));
+
+	jointsVector.push_back(joint1);
+	jointsVector.push_back(joint2);
+
+
+	addEntity(joint1);
+	addEntity(joint2);
+	addEntity(cir);
+	addEntity(joint1->jointData->pivot);
+	addEntity(joint2->jointData->pivot);
+
+
+
+
+	//texture = resourceManager.getTexture("Kirbo.png");
+	//music = resourceManager.getMusic("Spark-Man.ogg");
+	//PlayMusicStream(*music);
+
 
 	BindRayLib();
 
@@ -77,15 +91,12 @@ void BallsScene::Load()
 
 void BallsScene::UnLoad()
 {
-	for (auto& joint : jointsVector)
+
+	if (music != nullptr)
 	{
-		if (b2Joint_IsValid(joint->jointId) == true)
-		{
-			physicsSystem.DeleteJoint(joint->jointId);
-		}
+		StopMusicStream(*music);
+
 	}
-	jointsVector.clear();
-	StopMusicStream(*music);
 	UnloadTexture(texPrueba);
 
 	isDrawingLine = false;
@@ -103,7 +114,10 @@ void BallsScene::Update()
 	{
 		luaUpdate();
 	}
-	UpdateMusicStream(*music);
+	if (music != nullptr)
+	{
+		UpdateMusicStream(*music);
+	}
 
 
 	if (IsMouseButtonPressed(0))
@@ -120,23 +134,12 @@ void BallsScene::Update()
 		isDrawingLine = false;
 	}
 
-
 	if (isDrawingLine && !jointsVector.empty())
 	{
-		Vector2 collision;
 		for (auto& joint : jointsVector)
 		{
-			if (CheckCollisionLines(joint->pivot->pos,cir->pos,
-				lineStartPos, GetMousePosition(), &collision))
-			{
-				if (b2Joint_IsValid(joint->jointId) == true) 
-				{
-					physicsSystem.DeleteJoint(joint->jointId);
-				}
-
-			}
+			joint->checkCut(lineStartPos, GetMousePosition());
 		}
-		
 	}
 
 	if (cir->pos.y > 700 && isDefeat == false && isWin == false)
@@ -144,11 +147,6 @@ void BallsScene::Update()
 		Log::print("Se cayo la bola");
 		isDefeat = true;
 	}
-
-
-
-
-
 
 
 	PressButton();
@@ -180,23 +178,14 @@ void BallsScene::Draw()
 
 		DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
 	}
-	
-
-	if (!jointsVector.empty())
-	{
-		for (auto& joint : jointsVector)
-		{
-			if (b2Joint_IsValid(joint->jointId) == true) {
-				DrawLineV(joint->pivot->pos, cir->pos,BLACK);
-			}
-		}
-	}
 
 
 
 
-	
-	
+
+
+
+
 	if (showMsg)
 	{
 		int result = GuiMessageBox({ rectangle2 },
@@ -248,7 +237,7 @@ void BallsScene::BindRayLib()
 	//	});
 	rl.set_function("print", [](std::string message) {
 		std::cout << "[LUA]: " << message << std::endl;
-	});
+		});
 	rl["maroon"] = MAROON;
 	auto result = lua.script_file("assets/scripts/play_scene.lua");
 	if (result.valid()) {
@@ -274,6 +263,8 @@ void BallsScene::onCollision(const CollisionEvent& event)
 		Log::print("¡Colisión detectada entre " + event.A->getName());
 	}
 }
+
+
 
 
 
