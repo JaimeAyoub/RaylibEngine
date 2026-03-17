@@ -9,16 +9,25 @@ BallsScene::BallsScene()
 	eventManager.Suscribe(this, &BallsScene::EventLoadMsg);
 
 
-	/*   std::ifstream f("assets/json/PruebaJSON.json");
+	std::ifstream f("assets/json/PruebaJSON.json");
 
-	   if (f.is_open()) {
-		   printf("Archivo Abierto \n");
-		   json data = json::parse(f);
-		   std::string type = data["type"];
-		   printf("Tipo de objeto : %s \n", type.c_str());
-	   }
-	   else
-		   printf("Valio verga, NO SE CARGO \n");*/
+	if (f.is_open()) {
+		printf("Archivo Abierto \n");
+		json data = json::parse(f);
+		if (data.is_array()) {
+			for (auto& item : data) {
+				if (item.contains("type")) {
+					std::string type = item["type"];
+					float x = item["x"];
+					float y = item["y"];
+					printf("Tipo de objeto: %s en posicion (%.1f, %.1f)\n", type.c_str(), x, y);
+				}
+			}
+		}
+
+	}
+	else
+		printf("Valio verga, NO SE CARGO \n");
 
 }
 
@@ -105,6 +114,14 @@ void BallsScene::UnLoad()
 	Clear();
 	eventManager.Unsubscribe<LoadBallsEvent>(this);
 	eventManager.Unsubscribe<CollisionEvent>(this);
+
+	json j;
+	j["type"] = jointsVector[0]->jointData->pivot->getName();
+	j["posx"] = jointsVector[0]->jointData->pivot->pos.x;
+	j["posy"] = jointsVector[0]->jointData->pivot->pos.y;
+
+	std::ofstream file("assets/json/Salida.json");
+	file << std::setw(4) << j << std::endl;
 }
 
 void BallsScene::Update()

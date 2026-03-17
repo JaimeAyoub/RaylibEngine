@@ -19,8 +19,8 @@ public:
     void draw() override {
         if (b2Joint_IsValid(jointData->jointId)) {
             DrawLineV(jointData->pivot->pos, jointData->bola->pos, BLACK);
+            std::cout << "Dibujando JOINT" << std::endl;
         }
-      //  std::cout << "Dibujando JOINT" << std::endl;
     }
 
     bool checkCut(Vector2 lineStart, Vector2 lineEnd) {
