@@ -49,6 +49,7 @@ public:
 	
 private:
 	Rectangle button;
+	Rectangle buttonMainMenu;
 	Texture2D texPrueba;
 	std::shared_ptr<Music> music;
 	std::shared_ptr<Texture2D> texture;

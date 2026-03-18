@@ -30,6 +30,7 @@ void BallsScene::Load()
 	std::string path = "assets/json/Level" + std::to_string(currentLevel) + ".json";
 	NextLevel(path);
 	button = { 350,350,100,50 };
+	buttonMainMenu =  { 500,350,100,50 };
 	buttonPressed = false;
 	Name = "BallScene";
 	LoadBallsEvent event;
@@ -148,6 +149,11 @@ void BallsScene::Draw()
 			, (GetScreenWidth() / 2) - 200, 15, 50, BLACK);
 
 		DrawText("Reset", button.x + 2.5f, button.y + 20, 10, WHITE);
+
+		DrawRectangleRec(buttonMainMenu, buttonPressed ? RED : DARKGRAY);
+
+
+		DrawText("Go to MainMenu", buttonMainMenu.x + 2.5f, buttonMainMenu.y + 20, 10, WHITE);
 	}
 
 	if (showMsg)
@@ -171,12 +177,16 @@ void BallsScene::PressButton()
 {
 	if ((CheckCollisionPointRec(GetMousePosition(), button)) && IsMouseButtonPressed(0))
 	{
-		buttonPressed = true;
+	
 
 		if (isWin)
 			FinishLevel();
 		else if (isDefeat)
 			RestartLevel();
+	}
+	if ((CheckCollisionPointRec(GetMousePosition(), buttonMainMenu)) && IsMouseButtonPressed(0))
+	{
+		buttonPressed = true;
 	}
 
 }
