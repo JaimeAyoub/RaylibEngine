@@ -27,7 +27,7 @@ void BallsScene::Load()
 
 	isWin = false;
 
-	std::string path = "assets/json/Level" + std::to_string(currentLevel) + ".json";
+	std::string path = "assets/json/levels/Level" + std::to_string(currentLevel) + ".json";
 	NextLevel(path);
 	button = { 350,350,100,50 };
 	buttonMainMenu =  { 500,350,100,50 };
@@ -50,6 +50,7 @@ void BallsScene::UnLoad()
 	if (music != nullptr)
 	{
 		StopMusicStream(*music);
+		UnloadMusicStream(*music);
 		music = nullptr;
 
 	}
@@ -67,6 +68,7 @@ void BallsScene::UnLoad()
 	isDefeat = false;
 	isWin = false;
 	buttonPressed = false;
+	isLoadingNextLevel = false;
 
 	eventManager.Unsubscribe<LoadBallsEvent>(this);
 	eventManager.Unsubscribe<CollisionEvent>(this);
@@ -75,7 +77,10 @@ void BallsScene::UnLoad()
 	j["currentLevel"] = currentLevel;
 
 	std::ofstream file("assets/json/currentLevel.json");
-	file << std::setw(4) << j << std::endl;
+	if (file.is_open()) {
+		file << std::setw(4) << j << std::endl;
+	}
+
 }
 
 void BallsScene::Update()
