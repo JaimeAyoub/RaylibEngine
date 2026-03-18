@@ -30,7 +30,11 @@ public:
 	void Draw() override;
 	void PressButton() override;
 	void EventLoadMsg(const LoadBallsEvent& m);
+	void FinishLevel();
+	void NextLevel(std::string path);
+	void RestartLevel();
 	bool showMsg = false;
+	bool isLoadingNextLevel = false;
 	Rectangle rectangle = { 24, 24, 120, 30 };
 	Rectangle rectangle2 = { 24, 24, 240, 120 };
 
@@ -50,7 +54,7 @@ private:
 	std::shared_ptr<Texture2D> texture;
 
 	std::shared_ptr<PCircle> cir;
-
+	int currentLevel = 1;
 	bool isWin = false;
 	bool isDefeat = false;
 	std::vector<std::shared_ptr<Joint>> jointsVector;

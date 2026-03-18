@@ -8,55 +8,27 @@ BallsScene::BallsScene()
 {
 	eventManager.Suscribe(this, &BallsScene::EventLoadMsg);
 
-
-	std::ifstream f("assets/json/PruebaJSON.json");
-
+	std::ifstream f("assets/json/currentLevel.json");
 	if (f.is_open()) {
-		printf("Archivo Abierto \n");
 		json data = json::parse(f);
-		if (data.is_array()) {
-			for (auto& item : data) {
-				if (item.contains("type")) {
-					std::string type = item["type"];
-					float x = item["x"];
-					float y = item["y"];
-					printf("Tipo de objeto: %s en posicion (%.1f, %.1f)\n", type.c_str(), x, y);
-				}
-			}
-		}
-
+		currentLevel = data.value("currentLevel", 1); // si no existe, empieza en 1
+		printf("Nivel cargado: %d\n", currentLevel);
 	}
-	else
-		printf("Valio verga, NO SE CARGO \n");
+	else {
+		currentLevel = 1; // primera vez que se abre el juego
+		printf("No hay save, empezando desde nivel 1\n");
+	}
+
 
 }
 
 void BallsScene::Load()
 {
 
-	cir = physicsSystem.makeCircle("Bolita", "Ball", { 450, 200 }, 30, true);
+	isWin = false;
 
-
-
-	boxDef.pos = { 600,450 };
-	boxDef.isDynamic = false;
-	boxDef.name = "Goal";
-	boxDef.size = { 80,10 };
-
-	pivotDef.name = "Pivote";
-	pivotDef.isDynamic = false;
-	pivotDef.pos = { 50,100 };
-	pivotDef.radius = 50;
-
-	pivotDef2.name = "Pivote2";
-	pivotDef2.isDynamic = false;
-	pivotDef2.pos = { 500,100 };
-	pivotDef2.radius = 50;
-
-
-
-
-
+	std::string path = "assets/json/Level" + std::to_string(currentLevel) + ".json";
+	NextLevel(path);
 	button = { 350,350,100,50 };
 	buttonPressed = false;
 	Name = "BallScene";
@@ -64,63 +36,44 @@ void BallsScene::Load()
 	eventManager.emit(event);
 	texPrueba = LoadTexture("assets/textures/Kirbo.png");
 
-	auto joint1 = std::make_shared<Joint>(physicsSystem.makeJoint(pivotDef, cir));
-	auto joint2 = std::make_shared<Joint>(physicsSystem.makeJoint(pivotDef2, cir));
-
-	jointsVector.push_back(joint1);
-	jointsVector.push_back(joint2);
-
-
-	addEntity(joint1);
-	addEntity(joint2);
-	addEntity(cir);
-	addEntity(joint1->jointData->pivot);
-	addEntity(joint2->jointData->pivot);
-
-
-
-
-	//texture = resourceManager.getTexture("Kirbo.png");
-	//music = resourceManager.getMusic("Spark-Man.ogg");
-	//PlayMusicStream(*music);
-
-
 	BindRayLib();
 
 	eventManager.Suscribe<CollisionEvent>(this, &BallsScene::onCollision);
-	for (int i = 0; i < 4; i++)
-	{
-		BodyData current = boxDef;
 
-		current.pos.y = boxDef.pos.y - i * boxDef.size.y;
-		addEntity(physicsSystem.makeBox(current));
-	}
 
 }
 
 void BallsScene::UnLoad()
 {
-
+//Descargamos assets
 	if (music != nullptr)
 	{
 		StopMusicStream(*music);
+		music = nullptr;
 
 	}
 	UnloadTexture(texPrueba);
-
-	isDrawingLine = false;
-	isWin = false;
-	isDefeat = false;
+//---------------------------
+//Descargamos vector y objetos
+	jointsVector.clear();
 	Clear();
+	cir = nullptr;
+//------------------------------
+	luaUpdate = sol::function{};
+	luaDraw = sol::function{};
+//------------------------------------
+	isDrawingLine = false;
+	isDefeat = false;
+	isWin = false;
+	buttonPressed = false;
+
 	eventManager.Unsubscribe<LoadBallsEvent>(this);
 	eventManager.Unsubscribe<CollisionEvent>(this);
 
 	json j;
-	j["type"] = jointsVector[0]->jointData->pivot->getName();
-	j["posx"] = jointsVector[0]->jointData->pivot->pos.x;
-	j["posy"] = jointsVector[0]->jointData->pivot->pos.y;
+	j["currentLevel"] = currentLevel;
 
-	std::ofstream file("assets/json/Salida.json");
+	std::ofstream file("assets/json/currentLevel.json");
 	file << std::setw(4) << j << std::endl;
 }
 
@@ -139,6 +92,7 @@ void BallsScene::Update()
 
 	if (IsMouseButtonPressed(0))
 	{
+
 		if (!isDrawingLine)
 		{
 			lineStartPos = GetMousePosition();
@@ -158,12 +112,12 @@ void BallsScene::Update()
 			joint->checkCut(lineStartPos, GetMousePosition());
 		}
 	}
-
-	if (cir->pos.y > 700 && isDefeat == false && isWin == false)
+	if (cir != nullptr && cir->pos.y > 700 && isDefeat == false && isWin == false)
 	{
 		Log::print("Se cayo la bola");
 		isDefeat = true;
 	}
+
 
 
 	PressButton();
@@ -179,7 +133,7 @@ void BallsScene::Draw()
 		DrawText("WIN"
 			, (GetScreenWidth() / 2) - 200, 15, 50, BLACK);
 
-		DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
+		DrawText("Next level", button.x + 2.5f, button.y + 20, 10, WHITE);
 	}
 	if (luaDraw)
 	{
@@ -193,15 +147,8 @@ void BallsScene::Draw()
 		DrawText("Perdiste, tonto"
 			, (GetScreenWidth() / 2) - 200, 15, 50, BLACK);
 
-		DrawText("Volver a MainMenu", button.x + 2.5f, button.y + 20, 10, WHITE);
+		DrawText("Reset", button.x + 2.5f, button.y + 20, 10, WHITE);
 	}
-
-
-
-
-
-
-
 
 	if (showMsg)
 	{
@@ -225,6 +172,11 @@ void BallsScene::PressButton()
 	if ((CheckCollisionPointRec(GetMousePosition(), button)) && IsMouseButtonPressed(0))
 	{
 		buttonPressed = true;
+
+		if (isWin)
+			FinishLevel();
+		else if (isDefeat)
+			RestartLevel();
 	}
 
 }
@@ -232,6 +184,88 @@ void BallsScene::PressButton()
 void BallsScene::EventLoadMsg(const LoadBallsEvent& m)
 {
 	Log::print(m.msg);
+}
+
+void BallsScene::FinishLevel()
+{
+	if (isLoadingNextLevel) return;
+	isLoadingNextLevel = true;
+	if (currentLevel < 3) //Cap para que no siga incrementando niveles que no existen.
+	{
+		currentLevel++;
+
+	}
+	else if (currentLevel >= 3)
+	{
+		currentLevel = 1;
+	}
+	UnLoad();
+	Load();
+
+	isLoadingNextLevel = false;
+}
+
+void BallsScene::NextLevel(std::string path) //Funcion para que se cargue el siguiente nivel
+{
+	std::ifstream f(path);
+	if (f.is_open()) {
+		printf("Archivo Abierto \n");
+		json data = json::parse(f);
+		printf("Cargando Nivel: %d\n", currentLevel);
+		if (data.contains("bola")) {   // Cargamos la bola
+			auto& b = data["bola"];
+			float x = data["bola"].value("posX", 0.0f);
+			float y = data["bola"].value("posY", 0.0f);
+			float radius = data["bola"].value("radius", 0.0f);
+
+			cir = physicsSystem.makeCircle("Bolita", "Ball", { x, y }, radius, true);
+			addEntity(cir);
+		}
+		if (data.contains("winBox"))
+		{
+			auto& w = data["winBox"];  //Cargamos la caja que tiene que colisionar para ganar
+			boxDef.name = w.value("name", "Goal");
+			boxDef.isDynamic = w.value("isDynamic", false);
+			boxDef.pos = { w.value("posX",0.0f),
+				w.value("posY",0.0f) };
+			boxDef.size = { w.value("width",0.0f),
+				w.value("height",0.0f) };
+			for (int i = 0; i < 4; i++) 
+			{
+				BodyData current = boxDef;
+				current.pos.y = boxDef.pos.y - i * boxDef.size.y;
+				addEntity(physicsSystem.makeBox(current));
+			}
+		}
+		if (data.contains("pivotes") && data["pivotes"].is_array()) {  // Cargamos todos los pivotes
+
+			for (const auto& item : data["pivotes"]) {
+				pivotDef.name = item.value("type", "Pivote");
+				pivotDef.isDynamic = item.value("isDynamic", false);
+				pivotDef.pos = { item.value("posX",0.0f),item.value("posY",0.0f) };
+				pivotDef.radius = item.value("radius", 0.0f);
+
+				auto joint = std::make_shared<Joint>(physicsSystem.makeJoint(pivotDef, cir));
+
+				jointsVector.push_back(joint);
+				addEntity(joint);
+				addEntity(joint->jointData->pivot);
+			}
+
+		}
+
+
+	}
+	else {
+
+		printf("Valio mangos, NO SE CARGO \n");
+	}
+}
+
+void BallsScene::RestartLevel()
+{
+	UnLoad();
+	Load();
 }
 
 void BallsScene::BindRayLib()

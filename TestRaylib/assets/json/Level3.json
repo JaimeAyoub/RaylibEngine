@@ -1,0 +1,40 @@
+﻿{
+  "CurrentLevel": 3,
+  "bola": {
+    "name": "bola",
+    "tag": "bola",
+    "posX": 200.0,
+    "posY": 100.0,
+    "radius": 30.0,
+    "isDynamic": true
+
+  },
+  "winBox": {
+    "name": "Goal",
+    "posX": 300.0,
+    "posY": 450.0,
+    "isDynamic": false,
+    "width": 40.0,
+    "height": 10.0
+  },
+  "pivotes": [
+    {
+      "type": "Pivote1",
+      "posX": 600.0,
+      "posY": 200.0,
+      "radius": 50.0
+    },
+    {
+      "type": "Pivote2",
+      "posX": 500.0,
+      "posY": 100.0,
+      "radius": 50.0
+    },
+    {
+      "type": "Pivote3",
+      "posX": 100.0,
+      "posY": 100.0,
+      "radius": 50.0
+    }
+  ]
+}
